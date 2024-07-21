@@ -4,7 +4,7 @@ import multer from "multer";
 const storage = multer.memoryStorage();
 
 // Debug storage configuration
-console.log(storage);
+
 
 const uploadUserImage = multer({ storage }).single('file');
 

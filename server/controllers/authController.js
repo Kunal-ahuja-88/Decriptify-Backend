@@ -1,5 +1,8 @@
 import { ethers } from "ethers"
 import UserModel from "../models/Users.js";
+import jwt from "jsonwebtoken"
+import { JWT_SECRETKEY } from "../config/serverConfig.js";
+
 export async function authController(req,res,next) {
      
 
@@ -25,8 +28,10 @@ export async function authController(req,res,next) {
                     const userData = await UserModel.create({userAddress : address})
                     console.log(userData)
                 }
-
-                res.status(200).json({message : "Authentication Successfull"})
+                 const token = jwt.sign({
+                 address
+                 },JWT_SECRETKEY)
+                res.status(200).json({message : "Authentication Successfull",token})
             }
 
             else {

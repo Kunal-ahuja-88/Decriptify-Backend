@@ -8,8 +8,7 @@ import encryptFile from "../utils/encryption.js";
 export async function uploadImageController(req,res,next) {
      
      try {
-
-      const address = "0x4B78Db97B90Fa4a33FFE1034c4688b7940C05614"
+      const address = req.address
       const userAddress = address.toLowerCase()
 
       const user = await UserModel.findOne({userAddress:userAddress})
@@ -25,13 +24,13 @@ export async function uploadImageController(req,res,next) {
       }
       
       const {encryptedData , iv} = encryptFile(req.file.buffer , user.encryptionKey)
-      console.log(encryptedData)
-
-       console.log(req.file)
+     
 
         const pinata = new pinataSDK({ pinataApiKey:PINATA_APIKEY, pinataSecretApiKey:PINATA_SECRETKEY });
+        const resPinata = await pinata.pinJSONToIPFS({encryptedData,iv})
+        console.log(resPinata)
         
-      res.status(200).json({message : "Image Uploaded"})
+      res.status(200).json({ipfsHash : resPinata.IpfsHash , message : "Image Uploaded"})
             
      } catch (error) {
       console.log(error);
